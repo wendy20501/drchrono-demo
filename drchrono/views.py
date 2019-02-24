@@ -9,14 +9,14 @@ class SetupView(TemplateView):
     """
     The beginning of the OAuth sign-in flow. Logs a user into the kiosk, and saves the token.
     """
-    template_name = 'index.html'
+    template_name = 'setup.html'
 
 
 class DoctorWelcome(TemplateView):
     """
     The doctor can see what appointments they have today.
     """
-    template_name = 'doctor_welcome.html'
+    template_name = 'dashboard.html'
 
     def get_token(self):
         """
