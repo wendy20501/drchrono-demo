@@ -1,8 +1,8 @@
-{% extends './base.html' %}
+{% extends './../../dist/index.html' %}
 {% block title %} Dashboard {% endblock%}
 {% block content %}
     <h1>Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
 {{ doctor }}
 
-
+<appointmentlist></appointmentlist>
 {% endblock %}

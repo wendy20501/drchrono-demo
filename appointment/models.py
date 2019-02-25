@@ -7,6 +7,7 @@ from django.db import models
 from django.db import models
 
 class Appointment(models.Model):
+    id = models.TextField(primary_key=True)
     doctor = models.TextField()
     duration = models.TextField()
     exam_room = models.TextField()
