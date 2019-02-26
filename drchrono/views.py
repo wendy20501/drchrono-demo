@@ -4,6 +4,7 @@ from social_django.models import UserSocialAuth
 from drchrono.endpoints import DoctorEndpoint
 from drchrono.endpoints import AppointmentEndpoint
 from appointment.models import Appointment
+from django.urls import reverse
 from datetime import date
 
 class SetupView(TemplateView):
@@ -56,6 +57,9 @@ class DoctorWelcome(TemplateView):
         # If this works, then your oAuth setup is working correctly.
         doctor_details = self.make_api_request()
         kwargs['doctor'] = doctor_details
+        kwargs['appointment_api_path'] = reverse('')
         self.update_appointments(doctor_details['id'])
         return kwargs
 
+class CheckIn(TemplateView):
+    template_name = 'src/views/checkin.html'

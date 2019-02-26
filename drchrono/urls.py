@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 from appointment.views import AppointmentViewSet
 admin.autodiscover()
 
-import views
+from . import views
 
 router = DefaultRouter()
 router.register(r'appointment', AppointmentViewSet)
@@ -14,7 +14,8 @@ router.register(r'appointment', AppointmentViewSet)
 urlpatterns = [
     url(r'^setup/$', views.SetupView.as_view(), name='setup'),
     url(r'^welcome/$', views.DoctorWelcome.as_view(), name='setup'),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
+    url(r'^checkin/', views.CheckIn.as_view(), name='checkin'),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     #url(r'^$', TemplateView.as_view(template_name="index.html")),
     url(r'^api/', include(router.urls)),
