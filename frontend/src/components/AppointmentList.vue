@@ -12,7 +12,7 @@
         <td>{{appointment.status}}</td>
         <td>{{appointment.id}}</td>
         <td>{{appointment.duration}}</td>
-        <td><button v-if="canCheckIn.includes(appointment.status)" @click="checkIn">Check In</button></td>
+        <td><button @click="checkIn">Check In</button></td>
       </tr>
     </table>
   </div>
