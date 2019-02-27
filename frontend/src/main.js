@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import appointmentlist from './components/AppointmentList'
+import checkinform from '.components/CheckInForm'
 import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -16,6 +17,7 @@ new Vue({
   router,
   components: {
     App,
-    appointmentlist
+    appointmentlist,
+    checkinform
   },
 })

@@ -14,7 +14,8 @@ class Appointment(models.Model):
     office = models.TextField()
     patient = models.TextField()
     scheduled_time = models.DateTimeField(auto_now_add=True)
-    status = models.TextField()
+    checkin_time = models.DateTimeField(null=True)
+    status = models.TextField(null=True)
 
     class Meta:
         db_table = "appointment"

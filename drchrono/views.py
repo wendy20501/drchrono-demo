@@ -59,3 +59,5 @@ class DoctorWelcome(TemplateView):
         self.update_appointments(doctor_details['id'])
         return kwargs
 
+class PatientCheckIn(TemplateView):
+    template_name = 'src/views/checkin.html'

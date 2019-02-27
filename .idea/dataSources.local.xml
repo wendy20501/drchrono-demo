@@ -10,7 +10,7 @@
       <auth-required>false</auth-required>
       <introspection-schemas>*:</introspection-schemas>
     </data-source>
-    <data-source name="mydb.sqlite3" uuid="e4e92080-db44-427a-ab85-6f061a0bb519">
+    <data-source name="mydb2.sqlite3" uuid="cbd00381-9bce-4893-be55-f36dacefcd45">
       <database-info product="SQLite" version="3.25.1" jdbc-version="2.1" driver-name="SQLite JDBC" driver-version="3.25.1" dbms="SQLITE" exact-version="3.25.1" exact-driver-version="3.25">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>

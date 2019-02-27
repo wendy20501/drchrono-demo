@@ -3,6 +3,6 @@
 {% block content %}
     <h1>Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
 {{ doctor }}
-
-<appointmentlist></appointmentlist>
+  <div><a href="http://localhost:8000/checkin">Check In</a></div>
+  <appointmentlist url="http://localhost:8000/api/appointment"></appointmentlist>
 {% endblock %}

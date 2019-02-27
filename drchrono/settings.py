@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'drchrono.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydb.sqlite3',
+        'NAME': 'mydb2.sqlite3',
     }
 }
 
@@ -131,9 +131,9 @@ STATIC_URL = '/static/'
 # 3.2) change your hostname if you're using a different way to access this kiosk; by default it'll run on localhost:8080
 # 4) copy your CLIENT_ID and SECRET keys into a file docker/environment. See the example
 # 5) Ask a dev if this doesn't work quickly; these settings can be fiddly, and we'd rather not wast time with them.
-SOCIAL_AUTH_DRCHRONO_KEY = 'igDX1PR0Cjw3nYm0McYaNfDc9MbcdzdqIlEF7mk2'
+SOCIAL_AUTH_DRCHRONO_KEY = 'oWeX7kkkz6tBKCFMejBDFCp97lQbZNsmybb81RlG'
 #os.getenv('SOCIAL_AUTH_CLIENT_ID')
-SOCIAL_AUTH_DRCHRONO_SECRET = 'xqRwdCYiqJQS8cSkx19FAi3HA2eQnUp867qoffQugmsGQTcQwIyVn0ubQZF5fOFpfyr22QgVAp7WJovp509SvM094ZKzbL7VHOVDGJetTw5cO8gj3HJYHp9VyEKIQ43E'
+SOCIAL_AUTH_DRCHRONO_SECRET = 'jzbmJiOuSALaQvn7UdN3pNKFEx7mOHom89578LmRACn08URxIhqEEMAfBwB3j3kaG8NabiIgMIZ15AwO0PZ8DfDylwwiu5XggJENmc15iCpSMt995dtznMx7J9inVnMf'
 #os.getenv('SOCIAL_AUTH_SECRET')
 
 
