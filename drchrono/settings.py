@@ -41,6 +41,8 @@ INSTALLED_APPS = (
     'social_django',
     'rest_framework',
     'appointment',
+    'doctor',
+    'patient',
     'corsheaders',
 )
 
