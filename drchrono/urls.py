@@ -4,12 +4,14 @@ from django.views.generic import TemplateView
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from appointment.views import AppointmentViewSet
+from patient.views import PatientViewSet
 admin.autodiscover()
 
 from . import views
 
 router = DefaultRouter()
 router.register(r'appointment', AppointmentViewSet)
+router.register(r'patient', PatientViewSet)
 
 urlpatterns = [
     url(r'^setup/$', views.SetupView.as_view(), name='setup'),

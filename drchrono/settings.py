@@ -40,9 +40,9 @@ INSTALLED_APPS = (
     'drchrono',
     'social_django',
     'rest_framework',
-    'appointment',
     'doctor',
     'patient',
+    'appointment',
     'corsheaders',
 )
 
@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'drchrono.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydb2.sqlite3',
+        'NAME': 'mydb.sqlite3',
     }
 }
 

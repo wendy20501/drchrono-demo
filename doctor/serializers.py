@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from appointment.models import Appointment
 from doctor.models import Doctor
 
 

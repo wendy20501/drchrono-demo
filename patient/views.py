@@ -14,3 +14,9 @@ class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     #permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        first_name = self.request.GET['first_name']
+        last_name = self.request.GET['last_name']
+
+        return self.queryset.filter({'first_name':first_name, 'last_name':last_name})
