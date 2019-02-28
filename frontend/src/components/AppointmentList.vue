@@ -1,6 +1,6 @@
-<template>
+<template class="border">
   <div>
-    <h3>Appoint List</h3>
+    <h3>Appointment List</h3>
     <table>
       <tr>
         <th>Status</th>
@@ -42,7 +42,6 @@
       getAppointmentList()
       {
         var cur = this;
-        //var API_URL = 'http://127.0.0.1:8080';
 
         this.axios.get(this.url).then((response) => {
           cur.appointments = response.data;
