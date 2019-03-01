@@ -2,5 +2,8 @@
 {% block title %} Check In {% endblock%}
 {% block content %}
     <h1>Patient Check In</h1>
-    <checkinlist url="{% url 'api:patient-list' %}"></checkinlist>
+    <checkinlist
+      patient_url="{% url 'api:patient-list' %}"
+      appointment_url="{% url 'api:appointment-search-related-appt' %}"
+    ></checkinlist>
 {% endblock %}

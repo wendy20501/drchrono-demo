@@ -1,4 +1,4 @@
-<template class="border">
+<template>
   <div>
     <h3>Appointment List</h3>
     <table>
@@ -12,7 +12,7 @@
         <td>{{appointment.status}}</td>
         <td>{{appointment.id}}</td>
         <td>{{appointment.duration}}</td>
-        <td><button @click="checkIn">Check In</button></td>
+        <td></td>
       </tr>
     </table>
   </div>
@@ -42,7 +42,6 @@
       getAppointmentList()
       {
         var cur = this;
-
         this.axios.get(this.url).then((response) => {
           cur.appointments = response.data;
         })
