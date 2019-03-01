@@ -49,7 +49,7 @@ class DoctorWelcome(TemplateView):
         api = PatientEndpoint(access_token)
         lst = list(api.list())
         for item in lst:
-            Patient.objects.update_or_create(defaults={'doctor':Doctor(id=doctor_id), 'first_name':item['first_name'], 'last_name':item['last_name'], 'date_of_birth':item['date_of_birth'], 'gender':item['gender']}, id=item['id'])
+            Patient.objects.update_or_create(defaults={'doctor':Doctor.objects.get(id=doctor_id), 'first_name':item['first_name'], 'last_name':item['last_name'], 'date_of_birth':item['date_of_birth'], 'gender':item['gender']}, id=item['id'])
 
     def update_appointments(self, doctor_id):
         access_token = self.get_token()
@@ -59,7 +59,7 @@ class DoctorWelcome(TemplateView):
         params['doctor'] = doctor_id
         lst = list(api.list(params=params,date=today))
         for item in lst:
-            Appointment.objects.update_or_create(defaults={'doctor':Doctor(id=doctor_id), 'duration':item['duration'], 'exam_room':item['exam_room'], 'office':item['office'], 'patient':Patient(id=item['patient']), 'scheduled_time':item['scheduled_time'], 'status':item['status']}, id=item['id'])
+            Appointment.objects.update_or_create(defaults={'doctor':Doctor.objects.get(id=doctor_id), 'duration':item['duration'], 'exam_room':item['exam_room'], 'office':item['office'], 'patient':Patient.objects.get(id=item['patient']), 'scheduled_time':item['scheduled_time'], 'status':item['status']}, id=item['id'])
 
     def get_context_data(self, **kwargs):
         kwargs = super(DoctorWelcome, self).get_context_data(**kwargs)
@@ -70,19 +70,17 @@ class DoctorWelcome(TemplateView):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            kwargs['user'] = request.user
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context)
-        else:
-            return redirect('src/views/setup.html')
+        if not request.user.is_authenticated():
+            return redirect('setup')
+
+        kwargs['user'] = request.user
+        return super(DoctorWelcome, self).get(request, *args, **kwargs)
 
 class PatientCheckIn(TemplateView):
     template_name = 'src/views/checkin.html'
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context)
-        else:
-            return redirect('src/views/setup.html')
+        if not request.user.is_authenticated():
+            return redirect('setup')
+
+        return super(PatientCheckIn, self).get(request, *args, **kwargs)

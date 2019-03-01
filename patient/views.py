@@ -18,5 +18,6 @@ class PatientViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         first_name = self.request.GET['first_name']
         last_name = self.request.GET['last_name']
+        #ssn = self.request.GET['ssn']
 
-        return self.queryset.filter({'first_name':first_name, 'last_name':last_name})
+        return self.queryset.filter(first_name=first_name, last_name=last_name)
