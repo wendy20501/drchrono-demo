@@ -12,6 +12,8 @@ class Appointment(models.Model):
     STATUS_CHOICE = (
         ("", ""),
         ("Checked In", "Checked In"),
+        ("In Session", "In Session"),
+        ("Complete", "Complete"),
     )
     id = models.IntegerField(primary_key=True)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)

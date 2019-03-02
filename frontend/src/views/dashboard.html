@@ -4,5 +4,8 @@
     <h1 class="text-green">Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
 {{ doctor }}
   <div><a href="{% url 'checkin' %}">Check In</a></div>
-  <appointmentlist url="{% url 'api:appointment-list' %}"></appointmentlist>
+  <appointmentlist
+    url="{% url 'api:appointment-search-today-appt' %}"
+    patient_url="{% url 'api:patient-list' %}"
+  ></appointmentlist>
 {% endblock %}

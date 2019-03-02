@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Patient Check In</h1>
     <checkinlist
-      patient_url="{% url 'api:patient-list' %}"
+      patient_url="{% url 'api:patient-search-patient-by-query' %}"
       appointment_url="{% url 'api:appointment-search-related-appt' %}"
     ></checkinlist>
 {% endblock %}
