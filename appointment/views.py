@@ -33,9 +33,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(methods=['get'], detail=False)
-    def search_related_appt(self, request, pk=None):
+    def search_today_related_appt(self, request, pk=None):
         patient_id = request.GET.get("patient_id")
-        appointments = self.get_queryset().filter(patient_id=patient_id)
+        appointments = self.get_queryset().filter(patient_id=patient_id, scheduled_time__date=date.today())
         serializer = AppointmentSerializer(instance=appointments, many=True)
         return Response(serializer.data)
 

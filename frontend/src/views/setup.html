@@ -1,8 +1,10 @@
 {% extends './../../dist/index.html' %}
 {% block title %} Setup {% endblock%}
 {% block content %}
-    <h1>DrChrono</h1>
-    <a href="{% url 'social:begin' 'drchrono' %}">
-      Set up your Check-in kiosk by logging into drchrono!
+  <div class="w-full h-screen flex flex-col items-center justify-center">
+    <img src="assets/images/drchrono-logo.png">
+    <a class="btn btn-primary" href="{% url 'social:begin' 'drchrono' %}">
+      Doctor Login
     </a>
+  </div>
 {% endblock %}

@@ -31,8 +31,7 @@
         <td>{{appointment.id}}</td>
         <td>{{appointment.duration}}</td>
         <td>
-          <button @click="checkIn(appointment.id)">Check In</button>
-          <button v-if="canCheckIn(appointment.status)" @click="checkIn(appointment.id)">Check In</button>
+          <button v-if="canCheckIn(appointment.status)" class="btn btn-primary" @click="checkIn(appointment.id)">Check In</button>
           <span v-else>Already checked in</span>
         </td>
       </tr>

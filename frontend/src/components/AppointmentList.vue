@@ -3,9 +3,9 @@
     <h3>Appointment List</h3>
     <div>
       <h4>In Session</h4>
-      <div v-for="(patient, appt_id, i) in inSessionPatient" :key="i">
-        <span>{{patient.first_name + ' ' + patient.last_name}}</span>
-        <button class="btn btn-primary" @click="updateStatus(appt_id, 'Complete')">Complete</button>
+      <div v-for="(item, i) in inSessionPatient" :key="i">
+        <span>{{item.patient.first_name + ' ' + item.patient.last_name}}</span>
+        <button class="btn btn-primary" @click="updateStatus(item.id, 'Complete')">Complete</button>
       </div>
     </div>
     <table>
@@ -62,11 +62,8 @@
           cur.appointments = response.data;
           if (init) {
             for (var i in cur.appointments) {
-              console.log( cur.appointments[i]);
               if (cur.appointments[i].status == 'In Session') {
                 cur.updateInSession(cur.appointments[i].id, cur.appointments[i].patient)
-                //cur.inSessionPatient.push(patient);
-                //console.log(patient);
               }
             }
           }
@@ -85,30 +82,40 @@
         return (hh==0? '': hh + 'hr ') + mm +'min';
       },
       updateStatus(appointment_id, status) {
+        var idx = this.getAppointmentById(appointment_id);
         this.appointments[idx].status = status;
-        var cur = this;
         this.axios.patch('http://127.0.0.1:8000/api/appointment/' + appointment_id + '/', {status:status})
           .then((response) => {
              console.log('done');
           }).catch(function (error) {
               console.log(error);
           });
-        this.updateInSession(appointment_id, this.appointments[idx].patient);
+        if (status == 'In Session') {
+          this.updateInSession(appointment_id, this.appointments[idx].patient);
+        } else if (status == 'Complete') {
+          var i = this.inSessionPatient.findIndex((appt) => {
+            return appt.id == appointment_id;
+          });
+          this.inSessionPatient.splice(i, 1);
+        }
       },
       updateInSession(appointment_id, patient_id) {
         this.axios.get(this.patient_url + patient_id)
           .then((response) => {
-            console.log(response.data);
-            this.inSessionPatient.push({appointment_id:response.data});
+            this.inSessionPatient.push({
+              id:appointment_id,
+              patient:response.data
+            });
           })
           .catch(function (error) {
               console.log(error);
           });
       },
       getAppointmentById(id) {
-        this.appointments.findIndex((appt) => {
+        var idx = this.appointments.findIndex((appt) => {
           return appt.id == id;
         })
+        return idx;
       }
     }
   }
