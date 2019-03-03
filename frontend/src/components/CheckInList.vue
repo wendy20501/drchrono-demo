@@ -38,6 +38,7 @@
     </table>
   </div>
 </template>
+
 <script>
   export default {
     props: {
@@ -84,7 +85,7 @@
       },
       findAppointments(patient_id) {
         var cur = this;
-        this.axios.get(this.appointment_url, {params:{patient_id:patient_id}})
+        this.axios.get(this.appointment_url, {params:{patient_id:patient_id, date:new Date()  }})
           .then((response) => {
               cur.appointments = Object.keys(response.data).map(function(key) {
                 return response.data[key];

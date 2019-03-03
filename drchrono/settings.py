@@ -88,9 +88,14 @@ TEMPLATES = [
     },
 ]
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
+STATIC_URL = '/static/'
+
 # Add for vuejs
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/dist/static"),
+    os.path.join(BASE_DIR, "frontend/dist/images")
 ]
 
 WSGI_APPLICATION = 'drchrono.wsgi.application'
@@ -118,12 +123,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-STATIC_URL = '/static/'
-
 
 # TODO: Configure your drchrono.com account's API settings to allow this app access
 # 1) go to https://app.drchrono.com/api-management/

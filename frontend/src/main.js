@@ -8,6 +8,7 @@ import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import '@/assets/css/tailwind.css'
+import '@/assets/css/main.css'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)

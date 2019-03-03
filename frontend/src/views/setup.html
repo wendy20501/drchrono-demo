@@ -1,10 +1,14 @@
 {% extends './../../dist/index.html' %}
 {% block title %} Setup {% endblock%}
-{% block content %}
-  <div class="w-full h-screen flex flex-col items-center justify-center">
-    <img src="assets/images/drchrono-logo.png">
-    <a class="btn btn-primary" href="{% url 'social:begin' 'drchrono' %}">
-      Doctor Login
-    </a>
+{% block body %}
+  <div class="setup">
+    <div class="wrapper">
+      {% load static from staticfiles %}
+      <img src="{% static "drchrono-logo.png" %}" alt="My image">
+      <div class="mt-4 leading-loose">Practice Medicine, Not Administration.</div>
+      <a class="mt-16 btn btn-primary" href="{% url 'social:begin' 'drchrono' %}">
+        Login
+      </a>
+    </div>
   </div>
 {% endblock %}

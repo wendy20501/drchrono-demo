@@ -1,9 +1,9 @@
-{% extends './../../dist/index.html' %}
+{% extends './base.html' %}
 {% block title %} Check In {% endblock%}
 {% block content %}
     <h1>Patient Check In</h1>
     <checkinlist
-      patient_url="{% url 'api:patient-search-patient-by-query' %}"
-      appointment_url="{% url 'api:appointment-search-today-related-appt' %}"
+      patient_url="{% url 'api:patient-list' %}"
+      appointment_url="{% url 'api:appointment-search-related-appt' %}"
     ></checkinlist>
 {% endblock %}

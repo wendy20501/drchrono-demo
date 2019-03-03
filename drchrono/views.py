@@ -28,6 +28,7 @@ class DoctorWelcome(TemplateView):
         """
         oauth_provider = UserSocialAuth.objects.get(provider='drchrono')
         access_token = oauth_provider.extra_data['access_token']
+        refresh_token = oauth_provider.extra_data['refresh_token']
         return access_token
 
     def get_current_doctor(self, user):

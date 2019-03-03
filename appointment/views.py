@@ -9,35 +9,49 @@ from social_django.models import UserSocialAuth
 
 from appointment.models import Appointment
 from appointment.serializers import AppointmentSerializer
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from django.http import HttpResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from doctor.models import Doctor
 from drchrono.endpoints import AppointmentEndpoint
-import datetime
-from datetime import date
+from datetime import datetime
+from dateutil.parser import parse
+#from drchrono.utility import FilterByDoctor
 
 from patient.models import Patient
 
+class FilterByDoctor(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        print('########', request.user)
+        doctor = Doctor.objects.get(user=request.user)
+        return queryset.filter(doctor=doctor)
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    #permission_classes = (IsAuthenticated,)
+    print('hello')
+    filter_backends = (FilterByDoctor,)
+    permission_classes = (IsAuthenticated,)
+    # filter_fields = ("patient",)
 
-    @action(methods=['get'], detail=False)
-    def search_today_appt(self, request, pk=None):
-        appointments = self.get_queryset().filter(scheduled_time__date=date.today())
-        serializer = AppointmentSerializer(instance=appointments, many=True)
+    def queryTest(self, myDict):
+        ret = self.get_queryset().filter(**myDict)
+        serializer = AppointmentSerializer(instance=ret, many=True)
         return Response(serializer.data)
 
     @action(methods=['get'], detail=False)
-    def search_today_related_appt(self, request, pk=None):
+    def search_today_appt(self, request):
+        return self.queryTest({'scheduled_time__date': datetime.today()})
+
+    @action(methods=['get'], detail=False)
+    def search_related_appt(self, request, pk=None):
         patient_id = request.GET.get("patient_id")
-        appointments = self.get_queryset().filter(patient_id=patient_id, scheduled_time__date=date.today())
-        serializer = AppointmentSerializer(instance=appointments, many=True)
-        return Response(serializer.data)
+        query_date = parse(request.GET.get("date"))
+        return self.queryTest({'patient_id': patient_id, 'scheduled_time__date': query_date})
+
 
     def partial_update(self, request, *args, **kwargs):
         def get_token():

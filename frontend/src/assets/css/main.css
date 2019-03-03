@@ -1,0 +1,64 @@
+html {
+  font-size: 15px;
+}
+
+.setup {
+  @apply .w-full;
+  @apply .h-screen;
+  @apply .flex;
+  @apply .items-center;
+  @apply .justify-center;
+  background: url("/static/setup-bg.jpg");
+}
+
+.wrapper {
+  @apply .p-16;
+  @apply .rounded-lg;
+  background: rgba(0,0,0,0.25);
+  @apply .flex;
+  @apply .flex-col;
+  @apply .items-center;
+  @apply .text-white;
+}
+
+header {
+  @apply .bg-blue;
+  @apply .w-full;
+  @apply .h-16;
+  @apply .flex;
+  @apply .justify-between;
+  @apply .text-white;
+  @apply .fixed;
+  @apply .pin-t;
+  @apply .pin-l;
+}
+
+footer {
+  @apply .bg-blue;
+  @apply .text-white;
+  @apply .w-full;
+  @apply .h-8;
+  @apply .fixed;
+  @apply .pin-b;
+  @apply .pin-l;
+  @apply .text-center;
+}
+
+.page-wrapper {
+  @apply .w-full;
+  @apply .h-screen;
+  @apply .pt-16;
+  @apply .pb-8;
+  @apply .bg-grey-lightest;
+}
+
+.container {
+  @apply .w-full;
+  @apply .h-full;
+  @apply .p-8;
+}
+
+.title {
+  @apply .text-2xl;
+  @apply .text-grey-darkest;
+}

@@ -1,10 +1,9 @@
-{% extends './../../dist/index.html' %}
+{% extends './base.html' %}
 {% block title %} Dashboard {% endblock%}
 {% block content %}
-  <h1 class="text-green">Welcome {{ doctor.first_name }} {{ doctor.last_name }}</h1>
-  <div><a href="{% url 'checkin' %}">Check In</a></div>
+  <div class="title">Welcome Dr. {{ doctor.first_name }} {{ doctor.last_name }}</div>
   <appointmentlist
-    url="{% url 'api:appointment-search-today-appt' %}"
+    url="{% url 'api:appointment-list' %}"
     patient_url="{% url 'api:patient-list' %}"
   ></appointmentlist>
 {% endblock %}
