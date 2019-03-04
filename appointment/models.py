@@ -14,6 +14,7 @@ class Appointment(models.Model):
         ("Checked In", "Checked In"),
         ("In Session", "In Session"),
         ("Complete", "Complete"),
+        ("Cancelled", "Cancelled"),
     )
     id = models.IntegerField(primary_key=True)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
@@ -24,6 +25,7 @@ class Appointment(models.Model):
     scheduled_time = models.DateTimeField(auto_now_add=True)
     checkin_time = models.DateTimeField(null=True)
     status = models.CharField(max_length=20, null=True, choices=STATUS_CHOICE, default="")
+    session_time = models.DateTimeField(null=True)
 
     class Meta:
         db_table = "appointment"

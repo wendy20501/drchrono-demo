@@ -1,8 +1,8 @@
 <header>
   {% load static from staticfiles %}
-  <img class="m-4" src="{% static "drchrono-logo.png" %}" alt="My image">
-  <div class="flex">
-    <a href="{% url 'checkin' %}" class="m-2 btn">Check In</a>
-    <button class="m-2 btn">Log Out</button>
+  <a href="{% url 'dashboard' %}" ><img src="{% static "drchrono-logo.png" %}" alt="My image"></a>
+  <div class="flex items-center justify-center">
+    <a href="{% url 'checkin' %}" class="m-2 btn btn-secondary text-white">Check In</a>
+    <a href="{% url 'waiting' %}" class="m-2 btn btn-secondary text-white">Analysis</a>
   </div>
 </header>

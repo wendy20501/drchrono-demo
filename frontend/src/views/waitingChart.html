@@ -1,0 +1,10 @@
+{% extends './base.html' %}
+{% block extra_header %}<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>{% endblock %}
+{% block title %} Waiting Time Chart {% endblock%}
+{% block content %}
+  <div class="title">Average Waiting Time Chart</div>
+  <waitingchart
+    appointment_url="{% url 'api:appointment-list' %}"
+    waiting-time-list="{{ avg_wait_time }}"
+  ></waitingchart>
+{% endblock %}

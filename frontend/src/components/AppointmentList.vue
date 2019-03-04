@@ -1,37 +1,50 @@
 <template>
   <div>
-    <h3>Appointment List</h3>
+    <div class="subtitle">Appointment List</div>
+    <div class="flex justify-between">
+      <span>Date: {{getDate()}}</span>
+      <span>Auto update: <ToggleButton @change="switchAutoUpdate" v-model="autoLoad"></ToggleButton></span>
+    </div>
     <div>
-      <h4>In Session</h4>
-      <div v-for="(item, i) in inSessionPatient" :key="i">
-        <span>{{item.patient.first_name + ' ' + item.patient.last_name}}</span>
-        <button class="btn btn-primary" @click="updateStatus(item.id, 'Complete')">Complete</button>
+      <div v-if="loading"><Circle2></Circle2></div>
+      <table v-else>
+        <tr>
+          <th>Status</th>
+          <th>Patient</th>
+          <th>Schedule</th>
+          <th>Waiting</th>
+          <th>Action</th>
+        </tr>
+        <tr v-if="!appointments || displayAppts.length == 0">
+          <td colspan="100%">Cannot find any appointment</td>
+        </tr>
+        <tr v-else v-for="(appointment, idx) in displayAppts" :key="idx">
+          <td><span class="badge" :status="appointment.status">{{appointment.status}}</span></td>
+          <td>{{appointment.patient_info? appointment.patient_info.first_name + ' ' + appointment.patient_info.last_name : ''}}</td>
+          <td>{{getTime(appointment.scheduled_time)}}</td>
+          <td><span v-html="waitingTime(appointment.status, appointment.checkin_time)"></span></td>
+          <td>
+            <button v-if="appointment.status == 'Checked In'" class="btn btn-primary btn-xs" @click="updateStatus(appointment.id, 'In Session')">Meet</button>
+            <button v-if="appointment.status == 'In Session'" class="btn btn-info btn-xs" @click="updateStatus(appointment.id, 'Complete')">Complete</button>
+            <button class="btn btn-default btn-xs" @click="updatePatient(appointment.patient_info)">Detail</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div v-if="patient" class="pt-2">
+      <div class="subtitle">Appointment Detail</div>
+      <div class="item">
+        <div></div>
+        <div class="text-lg font-bold">{{patient.first_name + ' ' + patient.last_name}}</div>
+        <div><span class="font-semibold">Date of birth:</span> {{getDate(patient.date_of_birth)}}</div>
+        <div><span class="font-semibold">Gender:</span> {{patient.gender}}</div>
       </div>
     </div>
-    <table>
-      <tr>
-        <th>Status</th>
-        <th>ID</th>
-        <th>Duration</th>
-        <th>Waiting</th>
-        <th>Action</th>
-      </tr>
-      <tr v-if="!appointments || appointments.length == 0">
-        <td colspan="100%">Cannot find any appointment</td>
-      </tr>
-      <tr v-else v-for="(appointment, idx) in appointments" :key="idx">
-        <td>{{appointment.status}}</td>
-        <td>{{appointment.id}}</td>
-        <td>{{appointment.duration}}</td>
-        <td>{{waitingTime(appointment.status, appointment.checkin_time)}}</td>
-        <td>
-          <button v-if="appointment.status == 'Checked In'" class="btn btn-primary btn-sm" @click="updateStatus(appointment.id, 'In Session')">See Now</button>
-        </td>
-      </tr>
-    </table>
   </div>
 </template>
 <script>
+  import {Circle2} from 'vue-loading-spinner';
+  import { ToggleButton } from 'vue-js-toggle-button';
   export default {
     props:
     {
@@ -45,29 +58,92 @@
     data()
     {
       return {
+        displayAppts: [],
         appointments: [],
         canCheckIn:[null,'', 'Rescheduled', 'Confirmed'],
-        inSessionPatient:[],
+        finished: 0,
+        loading: true,
+        autoLoad:false,
+        timeout: null,
+        patient: null,
       }
+    },
+    components : {
+      Circle2,
+      ToggleButton
     },
     mounted()
     {
-      this.getAppointmentList(true);
+      this.axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/;
+        config.headers['X-CSRFToken'] = jQuery("[name=csrfmiddlewaretoken]").val();
+        return config
+      });
+      this.getAppointmentList();
+
+    },
+    watch: {
+      finished: function(val) {
+        if (val == this.appointments.length) {
+          this.loading = false;
+          this.displayAppts = this.appointments;
+        }
+      }
     },
     methods: {
-      getAppointmentList(init = false)
+      getAppointmentList()
       {
+        this.loading = true;
         var cur = this;
-        this.axios.get(this.url).then((response) => {
+        this.axios.get(this.url, {params:{date:this.getDate()}}).then((response) => {
           cur.appointments = response.data;
-          if (init) {
-            for (var i in cur.appointments) {
-              if (cur.appointments[i].status == 'In Session') {
-                cur.updateInSession(cur.appointments[i].id, cur.appointments[i].patient)
-              }
-            }
+          this.finished = 0;
+          for (var i in cur.appointments) {
+            cur.getPatientInfo(i);
           }
         })
+      },
+      updateStatus(appt_id, status) {
+        var idx = this.displayAppts.findIndex((appt) => {
+          return appt.id == appt_id;
+        });
+        console.log("update status:" + idx);
+        this.appointments[idx].status = status;
+        this.axios.patch('http://localhost:8000/api/appointment/' + appt_id + '/', {status:status})
+          .then((response) => {
+             console.log('done');
+          }).catch(function (error) {
+              console.log(error);
+          });
+      },
+      getPatientInfo(idx) {
+        var cur = this;
+        this.axios.get(this.patient_url + this.appointments[idx].patient + '/')
+          .then((response) => {
+            cur.appointments[idx].patient_info = response.data;
+            cur.finished++;
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+      },
+      updatePatient(info) {
+        this.patient = info;
+        console.log(this.patient);
+      },
+      getTime(timestring) {
+        var time = new Date(timestring)
+        var hh = time.getHours();
+        var mm = time.getMinutes();
+        return (hh > 9 ? hh: '0' + hh) + ":" + (mm > 9 ? mm: '0' + mm);
+      },
+      getDate(daystring = null) {
+        var day = daystring ? new Date(daystring) : new Date();
+        var dd = day.getDate();
+        var mm = day.getMonth() + 1;
+        var yyyy = day.getFullYear();
+        return yyyy + '-' + mm + '-' + dd;
       },
       waitingTime(status, checkin_time) {
         if(status != 'Checked In' || checkin_time == null)
@@ -79,43 +155,22 @@
         diff -= hh * 1000 * 60 * 60;
         var mm = Math.floor(diff / 1000 / 60);
         diff -= mm * 1000 * 60;
-        return (hh==0? '': hh + 'hr ') + mm +'min';
+        var result = hh > 0? '<span class="text-red">':'<span>';
+
+        return result + (hh==0? '': hh + 'hr ') + mm +'min</span>';
       },
-      updateStatus(appointment_id, status) {
-        var idx = this.getAppointmentById(appointment_id);
-        this.appointments[idx].status = status;
-        this.axios.patch('http://127.0.0.1:8000/api/appointment/' + appointment_id + '/', {status:status})
-          .then((response) => {
-             console.log('done');
-          }).catch(function (error) {
-              console.log(error);
-          });
-        if (status == 'In Session') {
-          this.updateInSession(appointment_id, this.appointments[idx].patient);
-        } else if (status == 'Complete') {
-          var i = this.inSessionPatient.findIndex((appt) => {
-            return appt.id == appointment_id;
-          });
-          this.inSessionPatient.splice(i, 1);
+      autoUpdate() {
+          if (this.autoLoad) {
+            this.getAppointmentList();
+            setTimeout(this.autoUpdate, 5000);
+          }
+      },
+      switchAutoUpdate() {
+        if(this.autoLoad) {
+          this.autoUpdate();
+        } else {
+          clearTimeout(this.timeout);
         }
-      },
-      updateInSession(appointment_id, patient_id) {
-        this.axios.get(this.patient_url + patient_id)
-          .then((response) => {
-            this.inSessionPatient.push({
-              id:appointment_id,
-              patient:response.data
-            });
-          })
-          .catch(function (error) {
-              console.log(error);
-          });
-      },
-      getAppointmentById(id) {
-        var idx = this.appointments.findIndex((appt) => {
-          return appt.id == id;
-        })
-        return idx;
       }
     }
   }

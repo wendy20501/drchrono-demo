@@ -7,7 +7,11 @@ from drchrono.endpoints import PatientEndpoint
 from appointment.models import Appointment
 from doctor.models import Doctor
 from patient.models import Patient
-from datetime import date
+from datetime import date, timedelta
+import json
+import collections
+import requests
+from datetime import datetime
 
 class SetupView(TemplateView):
     """
@@ -85,3 +89,23 @@ class PatientCheckIn(TemplateView):
             return redirect('setup')
 
         return super(PatientCheckIn, self).get(request, *args, **kwargs)
+
+class PatientWaitingChart(TemplateView):
+    template_name = 'src/views/waitingChart.html'
+
+    def get_day_avg_appt_wt(self, start):
+        lst = Appointment.objects.filter(scheduled_time__date=start)
+        tmp = [(x.session_time - x.checkin_time).seconds for x in lst if x.checkin_time is not None and x.session_time is not None]
+        avg = sum(tmp)/(len(tmp)*60) if len(tmp) != 0 else 0
+        return avg
+
+    def get_context_data(self, **kwargs):
+        kwargs = super(PatientWaitingChart, self).get_context_data(**kwargs)
+        ret = {}
+        for i in range(7):
+            curDay = date.today() - timedelta(days=i)
+            ret[str(curDay)] = self.get_day_avg_appt_wt(curDay)
+        print(ret)
+
+        kwargs['avg_wait_time'] = json.dumps(collections.OrderedDict(sorted(ret.items())))
+        return kwargs

@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import appointmentlist from './components/AppointmentList'
 import checkinlist from './components/CheckInList'
+import waitingchart from './components/WaitingChart'
 import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -21,5 +22,6 @@ new Vue({
     App,
     appointmentlist,
     checkinlist,
+    waitingchart,
   },
 })

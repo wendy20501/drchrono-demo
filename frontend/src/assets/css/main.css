@@ -2,6 +2,10 @@ html {
   font-size: 15px;
 }
 
+body {
+  @apply .bg-grey-lightest;
+}
+
 .setup {
   @apply .w-full;
   @apply .h-screen;
@@ -26,11 +30,13 @@ header {
   @apply .w-full;
   @apply .h-16;
   @apply .flex;
+  @apply .items-center;
   @apply .justify-between;
   @apply .text-white;
   @apply .fixed;
   @apply .pin-t;
   @apply .pin-l;
+  @apply .px-2;
 }
 
 footer {
@@ -46,10 +52,9 @@ footer {
 
 .page-wrapper {
   @apply .w-full;
-  @apply .h-screen;
+  @apply .max-h-screen;
   @apply .pt-16;
   @apply .pb-8;
-  @apply .bg-grey-lightest;
 }
 
 .container {
@@ -61,4 +66,79 @@ footer {
 .title {
   @apply .text-2xl;
   @apply .text-grey-darkest;
+}
+
+.subtitle {
+  @apply .text-xl;
+  @apply .text-blue-dark;
+  @apply .my-2;
+}
+
+.item {
+  @apply .bg-white;
+  @apply .p-4;
+  @apply .rounded;
+  @apply .my-2;
+}
+
+table {
+  border-collapse:separate;
+  table-layout: fixed;
+  border-spacing: 0;
+  @apply .w-full;
+  @apply .bg-white;
+}
+
+th:first-child {
+  @apply .rounded-tl-lg;
+}
+
+th:last-child {
+  @apply .rounded-tr-lg;
+}
+
+tr:nth-child(odd) {
+  @apply .bg-grey-lighter;
+}
+
+th {
+    @apply .bg-blue-dark;
+    @apply .text-white;
+}
+
+th, td {
+  @apply .p-2;
+}
+
+.badge[status="Complete"] {
+  @apply .bg-green-dark;
+}
+
+.badge[status="In Session"] {
+  @apply .bg-blue-dark;
+}
+
+.badge[status="Checked In"] {
+  @apply .bg-yellow-dark;
+}
+
+.form-item {
+  @apply .w-full;
+  @apply .my-2;
+  @apply .flex;
+}
+
+input {
+  @apply .border;
+  @apply .h-8;
+  @apply .w-64;
+  @apply .p-2;
+  @apply .rounded;
+}
+
+label {
+  @apply .mr-2;
+  @apply .w-24;
+  @apply .text-right;
+  @apply .whitespace-no-wrap;
 }
