@@ -13,16 +13,18 @@
           <th>Patient</th>
           <th>Schedule</th>
           <th>Waiting</th>
+          <th>Room</th>
           <th>Action</th>
         </tr>
         <tr v-if="!appointments || displayAppts.length == 0">
           <td colspan="100%">Cannot find any appointment</td>
         </tr>
         <tr v-else v-for="(appointment, idx) in displayAppts" :key="idx">
-          <td><span class="badge" :status="appointment.status">{{appointment.status}}</span></td>
+          <td><span class="badge" :status="appointment.status">{{appointment.status || 'Unknown'}}</span></td>
           <td>{{appointment.patient_info? appointment.patient_info.first_name + ' ' + appointment.patient_info.last_name : ''}}</td>
           <td>{{getTime(appointment.scheduled_time)}}</td>
           <td><span v-html="waitingTime(appointment.status, appointment.checkin_time)"></span></td>
+         <td>Room {{appointment.exam_room}}</td>
           <td>
             <button v-if="appointment.status == 'Checked In'" class="btn btn-primary btn-xs" @click="updateStatus(appointment.id, 'In Session')">Meet</button>
             <button v-if="appointment.status == 'In Session'" class="btn btn-info btn-xs" @click="updateStatus(appointment.id, 'Complete')">Complete</button>
@@ -32,7 +34,7 @@
       </table>
     </div>
     <div v-if="patient" class="pt-2">
-      <div class="subtitle">Appointment Detail</div>
+      <div class="subtitle">Patient Detail</div>
       <div class="item">
         <div></div>
         <div class="text-lg font-bold">{{patient.first_name + ' ' + patient.last_name}}</div>
@@ -157,7 +159,7 @@
         diff -= mm * 1000 * 60;
         var result = hh > 0? '<span class="text-red">':'<span>';
 
-        return result + (hh==0? '': hh + 'hr ') + mm +'min</span>';
+        return result + (hh==0? '': hh + ' hr ') + mm +' min</span>';
       },
       autoUpdate() {
           if (this.autoLoad) {

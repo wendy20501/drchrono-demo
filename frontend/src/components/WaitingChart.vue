@@ -6,7 +6,7 @@
 </template>
 <script>
   export default {
-    props:['appointment_url', 'waitingTimeList'],
+    props:['waitingTimeList'],
     data() {
       return {
         avgWaitingTime: JSON.parse(this.waitingTimeList)

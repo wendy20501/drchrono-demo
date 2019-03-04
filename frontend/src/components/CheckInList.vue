@@ -17,7 +17,7 @@
       </div>
       <div class="form-item">
         <label>SSN</label>
-        <input name="ssn" v-model="form.ssn">
+        <input name="social_security_number" v-model="form.social_security_number">
       </div>
       <button class="btn btn-primary" type="button" @click="checkform">Lookup appointment</button>
       <button class="btn btn-default" type="button" @click="goBack">Go Back</button>
@@ -28,16 +28,18 @@
         <tr>
           <th>Status</th>
           <th>ID</th>
+          <th>Schedule</th>
           <th>Duration</th>
           <th>Action</th>
         </tr>
         <tr v-for="(appointment, idx) in appointments" :key="idx">
-          <td class="badge" :status="appointment.status">{{appointment.status || 'Unknown'}}</td>
+          <td><span class="badge" :status="appointment.status">{{appointment.status || 'Unknown'}}</span></td>
           <td>{{appointment.id}}</td>
+          <td>{{getTime(appointment.scheduled_time)}}</td>
           <td>{{appointment.duration}}</td>
           <td>
-            <button v-if="canCheckIn(appointment.status)" class="btn btn-primary" @click="checkIn(appointment.id)">Check In</button>
-            <span v-else>Already checked in</span>
+            <button v-if="canCheckIn(appointment.status)" class="btn btn-primary btn-xs" @click="updateStatus(appointment.id, 'Checked In')">Check In</button>
+            <button v-if="canCancel(appointment.status)" class="btn btn-danger btn-xs" @click="cancel(appointment.id)">Cancel</button>
           </td>
         </tr>
       </table>
@@ -46,6 +48,7 @@
 </template>
 
 <script>
+  import Swal from 'sweetalert2'
   export default {
     props: {
       patient_url: {
@@ -69,9 +72,8 @@
         form: {
           first_name: "",
           last_name: "",
-          ssn:"",
+          social_security_number:"",
         },
-        ssn:""
       }
     },
     mounted() {
@@ -89,7 +91,7 @@
           this.lookup();
           return;
         }
-
+        this.showTable = false;
         if (!this.form.first_name) {
           this.errors.push('First name is required.');
         }
@@ -124,21 +126,35 @@
               console.log(error);
           });
       },
-      checkIn(appointment_id) {
-        var cur = this;
-        this.axios.patch('http://localhost:8000/api/appointment/' + appointment_id + '/', {status:'Checked In'})
+      updateStatus(appt_id, status) {
+        var idx = this.appointments.findIndex((appt) => {
+          return appt.id == appt_id;
+        });
+        console.log("update status:" + idx);
+        this.appointments[idx].status = status;
+        this.axios.patch('http://localhost:8000/api/appointment/' + appt_id + '/', {status:status})
           .then((response) => {
-             //cur.goBack();
+             console.log('done');
           }).catch(function (error) {
               console.log(error);
           });
       },
       canCheckIn(status) {
-        var canCheckInStatus = ['', "Arrived", "Confirmed", "Rescheduled"]
+        var canCheckInStatus = [null, '', "Arrived", "Confirmed", "Rescheduled", "In Room", ]
         return canCheckInStatus.includes(status);
+      },
+      canCancel(status) {
+        var canCancelStatus = [null, '', "Arrived", "Confirmed", "Rescheduled", "Checked In"]
+        return canCancelStatus.includes(status);
       },
       goBack() {
         window.location.href='http://localhost:8000/welcome';
+      },
+      getTime(timestring) {
+        var time = new Date(timestring)
+        var hh = time.getHours();
+        var mm = time.getMinutes();
+        return (hh > 9 ? hh: '0' + hh) + ":" + (mm > 9 ? mm: '0' + mm);
       },
       getToday() {
         var today = new Date();
@@ -146,6 +162,26 @@
         var mm = today.getMonth() + 1;
         var yyyy = today.getFullYear();
         return yyyy + '-' + mm + '-' + dd;
+      },
+      cancel(appointment_id) {
+        var cur = this;
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'You will not be able to revert this action!',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, cancel it!',
+          cancelButtonText: 'No, keep it'
+        }).then((result) => {
+          if (result.value) {
+            cur.updateStatus(appointment_id, 'Cancelled');
+            Swal.fire(
+              'Canceled!',
+              'Your appointment has been canceled.',
+              'success'
+            )
+          }
+        })
       }
     }
   }

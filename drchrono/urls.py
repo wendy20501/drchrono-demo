@@ -1,6 +1,4 @@
 from django.conf.urls import include, url
-from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from appointment.views import AppointmentViewSet

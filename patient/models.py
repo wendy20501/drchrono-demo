@@ -16,6 +16,7 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=35)
     date_of_birth = models.DateTimeField(null=True)
     gender = models.CharField(max_length=20, choices=GENDER_CHOICE, default="Male")
+    social_security_number = models.CharField(null=True, max_length=9)
 
     class Meta:
         db_table = "patient"

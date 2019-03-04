@@ -10,8 +10,6 @@ from patient.models import Patient
 from datetime import date, timedelta
 import json
 import collections
-import requests
-from datetime import datetime
 
 class SetupView(TemplateView):
     """
@@ -54,7 +52,7 @@ class DoctorWelcome(TemplateView):
         api = PatientEndpoint(access_token)
         lst = list(api.list())
         for item in lst:
-            Patient.objects.update_or_create(defaults={'doctor':Doctor.objects.get(id=doctor_id), 'first_name':item['first_name'], 'last_name':item['last_name'], 'date_of_birth':item['date_of_birth'], 'gender':item['gender']}, id=item['id'])
+            Patient.objects.update_or_create(defaults={'doctor':Doctor.objects.get(id=doctor_id), 'first_name':item['first_name'], 'last_name':item['last_name'], 'date_of_birth':item['date_of_birth'], 'gender':item['gender'], 'social_security_number':item['social_security_number']}, id=item['id'])
 
     def update_appointments(self, doctor_id):
         access_token = self.get_token()
@@ -105,7 +103,12 @@ class PatientWaitingChart(TemplateView):
         for i in range(7):
             curDay = date.today() - timedelta(days=i)
             ret[str(curDay)] = self.get_day_avg_appt_wt(curDay)
-        print(ret)
 
         kwargs['avg_wait_time'] = json.dumps(collections.OrderedDict(sorted(ret.items())))
         return kwargs
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('setup')
+
+        return super(PatientWaitingChart, self).get(request, *args, **kwargs)

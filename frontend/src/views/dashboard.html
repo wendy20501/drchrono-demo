@@ -3,7 +3,6 @@
 {% block content %}
   <div class="title">Welcome Dr. {{ doctor.first_name }} {{ doctor.last_name }}</div>
   <appointmentlist
-{#    url="{% url 'api:appointment-search-today-appt' %}"#}
     url="{% url 'api:appointment-list' %}"
     patient_url="{% url 'api:patient-list' %}"
   ></appointmentlist>
